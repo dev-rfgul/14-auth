@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 app.use(cookieParser());
@@ -43,5 +44,30 @@ app.get('/compare', (req, res) => {
     });
 })
 
+app.get('/jwt', (req, res) => {
+    let token = jwt.sign({ email: "raofahadgul785@gmail.com" }, "secret");
+    //the sceret is most most imp and we need to keep it secret in any case and mostly it is not in the plain text 
+    res.cookie('jwt', token);
+
+
+
+    res.send("the token has been set in the cookies");
+})
+app.get('/jwtread', (req, res) => {
+
+    console.log(req.cookies);
+    res.send(req.cookies);
+    // we can read the specific cookie as well like this 
+    console.log(req.cookies.jwt);
+
+
+})
+app.get('/jwtverify', (req, res) => {
+    // we can verity the token like this 
+
+    let data = jwt.verify(req.cookies.jwt, "secret")
+    res.send(data)
+    console.log(data);
+})
 
 app.listen(3000)
